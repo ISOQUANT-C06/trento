@@ -34,23 +34,31 @@ NucleusPtr Nucleus::create(const std::string& species, double nucleon_dmin) {
     return NucleusPtr{new Deuteron{}};
   else if (species == "Cu")
     return NucleusPtr{new WoodsSaxonNucleus{
-       63, 4.20, 0.596, nucleon_dmin
+       63, 4.20, 0.596, 0.0, nucleon_dmin
     }};
   else if (species == "Cu2")
     return NucleusPtr{new DeformedWoodsSaxonNucleus{
        63, 4.20, 0.596, 0.162, -0.006, nucleon_dmin
     }};
+  else if (species == "O")
+      return NucleusPtr{new WoodsSaxonNucleus{
+              16, 2.608, 0.513, -0.051, nucleon_dmin
+      }};
   else if (species == "Xe")
     return NucleusPtr{new WoodsSaxonNucleus{
-      129, 5.36, 0.590, nucleon_dmin
+      129, 5.36, 0.590, 0.0, nucleon_dmin
     }};
   else if (species == "Xe2")
     return NucleusPtr{new DeformedWoodsSaxonNucleus{
       129, 5.36, 0.590, 0.162, -0.003, nucleon_dmin
     }};
+  else if (species == "XeTri")
+    return NucleusPtr{new DeformedWoodsSaxonNucleus{
+     129, 5.60, 0.49, 0.21, 0.0, nucleon_dmin
+    }};
   else if (species == "Au")
     return NucleusPtr{new WoodsSaxonNucleus{
-      197, 6.38, 0.535, nucleon_dmin
+      197, 6.38, 0.535, 0.0, nucleon_dmin
     }};
   else if (species == "Au2")
     return NucleusPtr{new DeformedWoodsSaxonNucleus{
@@ -58,7 +66,11 @@ NucleusPtr Nucleus::create(const std::string& species, double nucleon_dmin) {
     }};
   else if (species == "Pb")
     return NucleusPtr{new WoodsSaxonNucleus{
-      208, 6.62, 0.546, nucleon_dmin
+      208, 6.62, 0.546, 0.0, nucleon_dmin
+    }};
+  else if (species == "PbTri")
+    return NucleusPtr{new WoodsSaxonNucleus{
+      208, 6.65, 0.54, 0.0, nucleon_dmin
     }};
   else if (species == "U")
     return NucleusPtr{new DeformedWoodsSaxonNucleus{
@@ -180,12 +192,12 @@ bool MinDistNucleus::is_too_close(const_iterator nucleon) const {
 // Extend the W-S dist out to R + 10a; for typical values of (R, a), the
 // probability of sampling a nucleon beyond this radius is O(10^-5).
 WoodsSaxonNucleus::WoodsSaxonNucleus(
-    std::size_t A, double R, double a, double dmin)
+    std::size_t A, double R, double a, double w, double dmin)
     : MinDistNucleus(A, dmin),
       R_(R),
       a_(a),
       woods_saxon_dist_(1000, 0., R + 10.*a,
-        [R, a](double r) { return r*r/(1.+std::exp((r-R)/a)); })
+        [R, a, w](double r) { return r*r*(1+w*(r/R)*(r/R))/(1.+std::exp((r-R)/a)); })
 {}
 
 /// Return something a bit smaller than the true maximum radius.  The

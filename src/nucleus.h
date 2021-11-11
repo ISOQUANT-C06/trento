@@ -211,7 +211,7 @@ class WoodsSaxonNucleus : public MinDistNucleus {
   /// \param R Woods-Saxon radius
   /// \param a Woods-Saxon surface thickness
   /// \param dmin minimum nucleon-nucleon distance (optional, default zero)
-  WoodsSaxonNucleus(std::size_t A, double R, double a, double dmin = 0);
+  WoodsSaxonNucleus(std::size_t A, double R, double a, double w=0., double dmin = 0.);
 
   /// The radius of a Woods-Saxon Nucleus is computed from the parameters (R, a).
   virtual double radius() const override;
