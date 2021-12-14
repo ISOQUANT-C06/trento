@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-option(STATIC "build static executable" OFF)
+option(STATIC "build static executable" FALSE)
 if(CMAKE_CXX_FLAGS MATCHES "(^| )-static($| )")
   set(STATIC ON)
 endif()
@@ -19,6 +19,9 @@ endif()
 # Find and use Boost.
 find_package(Boost 1.50 REQUIRED COMPONENTS filesystem program_options system)
 include_directories(SYSTEM ${Boost_INCLUDE_DIRS})
+
+find_package(MPI REQUIRED) #make it REQUIRED, if you want
+include_directories(SYSTEM ${MPI_CXX_INCLUDE_DIRS})
 
 # Find the HDF5 C++ library.  The CMake FindHDF5 module does not work reliably,
 # e.g. sometimes it links unnecessary libraries, other times it fails to include
