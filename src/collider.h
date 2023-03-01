@@ -63,6 +63,9 @@ class Collider {
   /// Minimum and maximum impact parameter.
   const double bmin_, bmax_;
 
+  /// Minimum multiplicity to store event.
+  const double min_requested_mult_;
+
   /// Parameterizes the degree of asymmetry between the two projectiles.  Used
   /// to apportion the total impact parameter to each projectile so that the
   /// resulting overlap is approximately centered.  Given the two nuclear radii

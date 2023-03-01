@@ -66,6 +66,7 @@ Collider::Collider(const VarMap& var_map)
       calc_ncoll_(var_map["ncoll"].as<bool>()),
       bmin_(var_map["b-min"].as<double>()),
       bmax_(determine_bmax(var_map, *nucleusA_, *nucleusB_, nucleon_common_)),
+      min_requested_mult_(var_map["min-requested-mult"].as<double>()),
       asymmetry_(determine_asym(*nucleusA_, *nucleusB_)),
       event_(var_map),
       output_(var_map) {
@@ -81,7 +82,8 @@ Collider::~Collider() = default;
 
 void Collider::run_events() {
   // The main event loop.
-  for (int n = 0; n < nevents_; ++n) {
+  int ntrue = 0;
+  for (int n = 0; ntrue < nevents_; ++n) {
     // Sampling the impact parameter also implicitly prepares the nuclei for
     // event computation, i.e. by sampling nucleon positions and participants.
     auto collision_attr = sample_collision();
@@ -92,8 +94,12 @@ void Collider::run_events() {
     // (thickness grid) and other event observables.
     event_.compute(*nucleusA_, *nucleusB_, nucleon_common_);
 
-    // Write event data.
-    output_(n, b, ncoll, event_);
+    // When multiplicity is below a threshold, don't store it
+    if (event_.multiplicity() > min_requested_mult_){
+      // Write event data.
+      output_(ntrue, b, ncoll, event_);
+      ntrue++;
+    }
   }
 }
 

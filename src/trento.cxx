@@ -136,6 +136,9 @@ int main(int argc, char* argv[]) {
     ("b-max",
      po::value<double>()->value_name("FLOAT")->default_value(-1., "auto"),
      "maximum impact parameter [fm]")
+    ("min-requested-mult",
+     po::value<double>()->value_name("FLOAT")->default_value(-1., "-1"),
+     "minimum multiplicity to store event")
     ("random-seed",
      po::value<int64_t>()->value_name("INT")->default_value(-1, "auto"),
      "random seed");
